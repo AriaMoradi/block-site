@@ -7,15 +7,16 @@ interface BlockSiteOptions {
   blocked: string[]
   tabId: number
   url: string
+  tempDisabledRules: Map<string, NodeJS.Timeout>
 }
 
 export default (options: BlockSiteOptions) => {
-  const { blocked, tabId, url } = options;
+  const { blocked, tabId, url, tempDisabledRules } = options;
   if (!blocked.length || !tabId || !url.startsWith("http")) {
     return;
   }
 
-  const foundRule = findRule(url, blocked);
+  const foundRule = findRule(url, blocked, tempDisabledRules);
   if (!foundRule || foundRule.type === "allow") {
     storage.get(["counter"]).then(({ counter }) => {
       counterHelper.flushObsoleteEntries({ blocked, counter });

@@ -16,11 +16,13 @@ const expandPath = (path: string) => {
   return expanded;
 };
 
-export default (url: string, blocked: string[]): Rule | undefined => {
+export default (url: string, blocked: string[], tempDisabledRules?: Map<string, NodeJS.Timeout>): Rule | undefined => {
   const normalizedUrl = removeProtocol(url);
   const rules = makeRules(blocked);
 
-  const foundRule = rules.find(({ path }) => {
+  const foundRule = rules.filter(
+    ({ type, path }) => type === "block" && tempDisabledRules && !tempDisabledRules.has(path),
+  ).find(({ path }) => {
     const patterns = expandPath(path)
       .map((path) => path.replace(/[.+]/g, "\\$&")) // escape regex characters
       .map((path) => (

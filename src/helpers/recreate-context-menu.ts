@@ -37,7 +37,7 @@ const createContextMenu = () => {
     storage.get(["blocked"]).then(({ blocked }) => {
       const updatedBlocked = [...blocked, blockedUrl];
       storage.set({ blocked: updatedBlocked });
-      blockSite({ blocked: updatedBlocked, tabId, url });
+      blockSite({ blocked: updatedBlocked, tabId, url, tempDisabledRules: new Map() });
     });
   });
 };

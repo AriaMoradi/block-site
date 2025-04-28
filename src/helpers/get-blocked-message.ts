@@ -8,6 +8,8 @@ const periodStrings: Record<CounterPeriod, string> = {
   TODAY: "today",
 };
 
-export default ({ url, rule, countParams: cp }: GetBlockedUrlParams): string =>
-  `<span id="url">${url}</span> <b>was blocked</b> by <span id="rule">${rule}</span>`
-  + (cp ? ` (${cp.count}x ${periodStrings[cp.period]})` : "");
+export default ({ url, rule, countParams: cp }: GetBlockedUrlParams): string => {
+  const baseMessage = `<span id="url"><a href="${url}" >${url}</a></span> <b>was blocked</b> by <span id="rule">${rule}</span>`;
+  const countMessage = cp ? ` (${cp.count}x ${periodStrings[cp.period]})` : "";
+  return `${baseMessage}${countMessage}`;
+};
